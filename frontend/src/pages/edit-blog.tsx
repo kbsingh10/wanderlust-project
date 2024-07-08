@@ -32,8 +32,15 @@ const EditBlog = () => {
 
   const navigate = useNavigate();
 
+<<<<<<< HEAD
   if (userData?.role === 'USER' && post?.authorId !== userData?._id) {
     navigate(-1);
+=======
+  if (post?.authorId && userData?._id) {
+    if (userData?.role === 'USER' && post?.authorId !== userData?._id) {
+      navigate(-1);
+    }
+>>>>>>> 379799d (feat-#419: added post edit page)
   }
 
   if (!loading) {
