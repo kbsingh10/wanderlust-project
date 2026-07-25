@@ -1,0 +1,56 @@
+version: "3.8"
+
+services:
+
+  mongodb:
+    image: mongo:7
+    container_name: mongodb
+    restart: always
+
+    ports:
+      - "27017:27017"
+
+    volumes:
+      - mongo-data:/data/db
+
+    networks:
+      - wanderlust-network
+
+  backend:
+    image: kbsingh10/wanderlust-backend:latest
+    container_name: wanderlust-backend
+
+    restart: always
+
+    depends_on:
+      - mongodb
+
+    ports:
+      - "5000:5000"
+
+    environment:
+      MONGODB_URI: mongodb://mongodb:27017/wanderlust
+
+    networks:
+      - wanderlust-network
+
+  frontend:
+    image: kbsingh10/wanderlust-frontend:latest
+    container_name: wanderlust-frontend
+
+    restart: always
+
+    depends_on:
+      - backend
+
+    ports:
+      - "80:80"
+
+    networks:
+      - wanderlust-network
+
+volumes:
+  mongo-data:
+
+networks:
+  wanderlust-network:
