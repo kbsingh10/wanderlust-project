@@ -4,7 +4,6 @@ WORKDIR /app
 
 COPY package*.json ./
 
-# Don't run the prepare script
 RUN npm install --ignore-scripts
 
 COPY . .
@@ -14,6 +13,9 @@ RUN npm run build
 FROM nginx:alpine
 
 COPY --from=builder /app/dist /usr/share/nginx/html
+
+# Copy custom nginx config
+COPY nginx.conf /etc/nginx/conf.d/default.conf
 
 EXPOSE 80
 
