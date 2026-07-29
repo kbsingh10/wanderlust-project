@@ -1,7 +1,7 @@
 import app from '../app.js';
 import connectDB from '../config/db.js';
 import { connectToRedis } from '../services/redis.js';
-import { VercelRequest, VercelResponse } from '@vercel/node';
+import { VercelRequest, VercelResponse } from 'http';
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   await connectToRedis();
