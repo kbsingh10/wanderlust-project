@@ -13,43 +13,42 @@ const EditBlog = () => {
   const { postId } = useParams();
 
   const userData = useAuthData();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const getPostById = async () => {
       try {
-        await axios.get(import.meta.env.VITE_API_PATH + `/api/posts/${postId}`).then((response) => {
-          setIsLoading(false);
-          setPost(response.data);
-        });
+        const response = await axios.get(import.meta.env.VITE_API_PATH + `/api/posts/${postId}`);
+
+        setPost(response.data);
+        setIsLoading(false);
       } catch (error) {
-        console.log(error);
+        console.error(error);
+        setIsLoading(false);
       }
     };
+
     if (post === undefined || post !== state?.post) {
       getPostById();
     }
-  }, [state?.post]);
+  }, [postId, state?.post]);
 
-  const navigate = useNavigate();
-
-<<<<<<< HEAD
-  if (userData?.role === 'USER' && post?.authorId !== userData?._id) {
-    navigate(-1);
-=======
-  if (post?.authorId && userData?._id) {
-    if (userData?.role === 'USER' && post?.authorId !== userData?._id) {
+  useEffect(() => {
+    if (
+      post?.authorId &&
+      userData?._id &&
+      userData.role === 'USER' &&
+      post.authorId !== userData._id
+    ) {
       navigate(-1);
     }
->>>>>>> 379799d (feat-#419: added post edit page)
+  }, [post, userData, navigate]);
+
+  if (loading) {
+    return <h1>Loading...</h1>;
   }
 
-  if (!loading) {
-    return (
-      <>
-        <FormBlog postId={postId} type="edit" post={post} />
-      </>
-    );
-  } else return <h1>Loading...</h1>;
+  return <FormBlog postId={postId} type="edit" post={post} />;
 };
 
 export default EditBlog;
