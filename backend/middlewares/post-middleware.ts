@@ -7,23 +7,21 @@ export const isAuthorMiddleware = async (req: Request, res: Response, next: Next
     const userId = req.user._id;
     const postId = req.params.id;
     const post = await Post.findById(postId);
+
     if (!post) {
       return res.status(HTTP_STATUS.NOT_FOUND).json({ message: RESPONSE_MESSAGES.POSTS.NOT_FOUND });
     }
 
     console.log(post.authorId, userId);
-    if (post?.authorId?.toString() !== userId) {
+
+    if (post.authorId?.toString() !== userId) {
       return res
         .status(HTTP_STATUS.FORBIDDEN)
         .json({ message: RESPONSE_MESSAGES.POSTS.NOT_ALLOWED });
     }
-<<<<<<< HEAD:backend/middlewares/post-middleware.ts
-    next();
-  } catch (error: any) {
-=======
+
     return next();
-  } catch (error) {
->>>>>>> 379799d (feat-#419: added post edit page):backend/middlewares/post-middleware.js
-    res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({ message: error.message });
+  } catch (error: any) {
+    return res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({ message: error.message });
   }
 };
